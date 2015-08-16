@@ -1,0 +1,26 @@
+{
+  "name": "SRC_Qt_Bot",
+  "version": "0.0.1",
+  "description": "Telegram bot for Qt group of SRC",
+  "main": "bot.js",
+  "dependencies": {
+    "telegram-bot-api": "~0.3.2",
+    "pm2": "*"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "nodejs bot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iMasoud/SRC_Qt_Bot.git"
+  },
+  "keywords": [
+    "Telegram"
+  ],
+  "author": "Masoud Alemi",
+  "license": "none",
+  "bugs": {
+    "url": "https://github.com/iMasoud/SRC_Qt_Bot/issues"
+  }
+}
