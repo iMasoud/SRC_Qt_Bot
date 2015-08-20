@@ -2,6 +2,8 @@ var fs = require("fs");
 
 exports.is_admin = function(chat_id)
 {
+    if(fs.existsSync("admin.list") == false)
+        fs.writeFileSync('admin.list', '', 'utf8'); //create file if not exists
     var is = false;
     var admin_list = fs.readFileSync('admin.list', 'utf8').toString().split("\n");
     for(i in admin_list)
@@ -16,6 +18,8 @@ exports.is_admin = function(chat_id)
 
 exports.is_configuring = function(chat_id)
 {
+    if(fs.existsSync("config.list") == false)
+        fs.writeFileSync('config.list', '', 'utf8'); //create file if not exists
     var is = false;
     var config_list = fs.readFileSync('config.list', 'utf8').toString().split("\n");
     for(i in config_list)
@@ -30,6 +34,8 @@ exports.is_configuring = function(chat_id)
 
 exports.is_reminder_on = function(chat_id)
 {
+    if(fs.existsSync("reminder.list") == false)
+        fs.writeFileSync('reminder.list', '', 'utf8'); //create file if not exists
     var is = false;
     var reminder_list = fs.readFileSync('reminder.list', 'utf8').toString().split("\n");
     for(i in reminder_list)
@@ -44,6 +50,8 @@ exports.is_reminder_on = function(chat_id)
 
 exports.get_config_step = function(chat_id)
 {
+    if(fs.existsSync("config.list") == false)
+        fs.writeFileSync('config.list', '', 'utf8'); //create file if not exists
     var step = -1;
     var config_list = fs.readFileSync('config.list', 'utf8').toString().split("\n");
     for(i in config_list)
@@ -58,11 +66,17 @@ exports.get_config_step = function(chat_id)
 
 exports.add_to_config = function(chat_id)
 {
+    if(fs.existsSync("config.list") == false)
+        fs.writeFileSync('config.list', '', 'utf8'); //create file if not exists
     fs.appendFileSync('config.list', chat_id + ':0\n', 'utf8');
 };
 
 exports.set_config_step = function(chat_id, step)
 {
+    if(fs.existsSync("config.list") == false)
+        fs.writeFileSync('config.list', '', 'utf8'); //create file if not exists
+    if(fs.existsSync("config.tmp") == false)
+        fs.writeFileSync('config.tmp', '', 'utf8'); //create file if not exists
     var config_list = fs.readFileSync('config.list', 'utf8').toString().split("\n");
     for(i in config_list)
     {
@@ -81,6 +95,10 @@ exports.set_config_step = function(chat_id, step)
 
 exports.remove_from_config = function(chat_id)
 {
+    if(fs.existsSync("config.list") == false)
+        fs.writeFileSync('config.list', '', 'utf8'); //create file if not exists
+    if(fs.existsSync("config.tmp") == false)
+        fs.writeFileSync('config.tmp', '', 'utf8'); //create file if not exists
     var config_list = fs.readFileSync('config.list', 'utf8').toString().split("\n");
     for(i in config_list)
     {
@@ -95,11 +113,17 @@ exports.remove_from_config = function(chat_id)
 
 exports.add_to_reminder = function(chat_id)
 {
+    if(fs.existsSync("reminder.list") == false)
+        fs.writeFileSync('reminder.list', '', 'utf8'); //create file if not exists
     fs.appendFileSync('reminder.list', chat_id + '\n', 'utf8');
 };
 
 exports.remove_from_reminder = function(chat_id)
 {
+    if(fs.existsSync("reminder.list") == false)
+        fs.writeFileSync('reminder.list', '', 'utf8'); //create file if not exists
+    if(fs.existsSync("reminder.tmp") == false)
+        fs.writeFileSync('reminder.tmp', '', 'utf8'); //create file if not exists
     var reminder_list = fs.readFileSync('reminder.list', 'utf8').toString().split("\n");
     for(i in reminder_list)
     {
@@ -114,18 +138,21 @@ exports.remove_from_reminder = function(chat_id)
 
 exports.add_line_to_tmp_event = function(line)
 {
+    if(fs.existsSync("next_event.tmp") == false)
+        fs.writeFileSync('next_event.tmp', '', 'utf8'); //create file if not exists
     fs.appendFileSync('next_event.tmp', line + '\n', 'utf8');
 };
 
 exports.get_line_from_tmp_event = function(number)
 {
+    if(fs.existsSync("next_event.tmp") == false)
+        fs.writeFileSync('next_event.tmp', '', 'utf8'); //create file if not exists
     var line = "";
     var lines_list = fs.readFileSync('next_event.tmp', 'utf8').toString().split("\n");
     for(i in lines_list)
     {
         var j = i; //why i did this?! because when i logged i it was 01 
         j++; //but when i logged i+1 it was 11 :O :(
-        console.log("j is " + j + ", number is " + number);
         if(j == number)
         {
             line = lines_list[i];
@@ -136,22 +163,32 @@ exports.get_line_from_tmp_event = function(number)
 
 exports.finish_tmp_event = function()
 {
+    if(fs.existsSync("next_event.list") == false)
+        fs.writeFileSync('next_event.list', '', 'utf8'); //create file if not exists
+    if(fs.existsSync("next_event.tmp") == false)
+        fs.writeFileSync('next_event.tmp', '', 'utf8'); //create file if not exists
     fs.unlinkSync('next_event.list');
     fs.renameSync('next_event.tmp', 'next_event.list');
 };
 
 exports.cancel_tmp_event = function()
 {
+    if(fs.existsSync("next_event.tmp") == false)
+        fs.writeFileSync('next_event.tmp', '', 'utf8'); //create file if not exists
     fs.unlinkSync('next_event.tmp');
 };
 
-exports.add_line_to_tmp_event_h = function()
+exports.add_line_to_tmp_event_h = function(line)
 {
+    if(fs.existsSync("next_event_h.tmp") == false)
+        fs.writeFileSync('next_event_h.tmp', '', 'utf8'); //create file if not exists
     fs.appendFileSync('next_event_h.tmp', line + '\n', 'utf8');
 };
 
 exports.get_line_from_tmp_event_h = function(number)
 {
+    if(fs.existsSync("next_event_h.tmp") == false)
+        fs.writeFileSync('next_event_h.tmp', '', 'utf8'); //create file if not exists
     var line = "";
     var lines_list = fs.readFileSync('next_event_h.tmp', 'utf8').toString().split("\n");
     for(i in lines_list)
@@ -168,17 +205,25 @@ exports.get_line_from_tmp_event_h = function(number)
 
 exports.finish_tmp_event_h = function()
 {
+    if(fs.existsSync("next_event_h.list") == false)
+        fs.writeFileSync('next_event_h.list', '', 'utf8'); //create file if not exists
+    if(fs.existsSync("next_event_h.tmp") == false)
+        fs.writeFileSync('next_event_h.tmp', '', 'utf8'); //create file if not exists
     fs.unlinkSync('next_event_h.list');
     fs.renameSync('next_event_h.tmp', 'next_event_h.list');
 };
 
 exports.cancel_tmp_event_h = function()
 {
+    if(fs.existsSync("next_event_h.tmp") == false)
+        fs.writeFileSync('next_event_h.tmp', '', 'utf8'); //create file if not exists
     fs.unlinkSync('next_event_h.tmp');
 };
 
 exports.get_line_from_event = function(number)
 {
+    if(fs.existsSync("next_event.list") == false)
+        fs.writeFileSync('next_event.list', '', 'utf8'); //create file if not exists
     var line = "";
     var lines_list = fs.readFileSync('next_event.list', 'utf8').toString().split("\n");
     for(i in lines_list)

@@ -1,1 +1,0 @@
-create_tmp_event(); add_line_to_tmp_event(); get_line_from_tmp_event() finish_tmp_event() cancel_tmp_event()
