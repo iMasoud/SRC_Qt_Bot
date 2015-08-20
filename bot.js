@@ -3,6 +3,8 @@ var fs = require("fs");
 var jc = require("./jalali");
 var keyboards = require("./keyboards");
 var texts = require("./texts");
+var functions = require("./functions");
+var return_next_event_h = require("./return_next_event_h");
 
 // console.log((new Date()).getYear() + '/' + (new Date()).getMonth() + '/' + (new Date()).getDate() + ', ' + (new Date()).getHours() + ':' + (new Date()).getMinutes() + ':' + (new Date()).getSeconds());
 // console.log(jc.j2g([1394,05,28]));
@@ -19,449 +21,2270 @@ var api = new telegram(
 
 api.on('message', function(message)
 {
-//    TODO: complete the if (s) untill all combinations are covered. */
-//    TODO: should move all texts to a module
-//    TODO: should create 3 functons to check: is_admin() is_configing() is_reminder_on() where all get a chat id and return a boolean
-//    TODO: should create functions get_config_step() add_to_config() set_config_step() remove_from_config() add_to_reminder() remove_from_reminder() create_tmp_event(); add_line_to_tmp_event(); get_line_from_tmp_event() finish_tmp_event() cancel_tmp_event() create_tmp_event_h() add_line_to_tmp_event_h() finish_tmp_event_h() cancel_tmp_event_h()
-//return_next_event_h() create human readable full string of next event from h file
-//return_next_event() returns array of date of next_event
-//no need to get_line_from_tmp_event_h()
+//TODO: should move all texts to a module
+//TODO: create timer function for reminding guys in list
 
-/*
-	if /start
-		if admin
-			if config
-				message "don't bull shit" with no keyboard
+	if(message.text == "/start")
+    {
+		if(functions.is_admin(message.chat.id) == true)
+        {
+			if(functions.is_configuring(message.chat.id) == true)
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_bull_shit
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
 			else
-				if reminder on
-                    message "start " with admin keyboard suitable
+            {
+				if(functions.is_reminder_on(message.cht.id) == true)
+                {
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:texts.welcome,
+                        reply_markup: JSON.stringify(keyboards.admin_on)
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                }
                 else
-                    message "start " with admin keyboard suitable
+                {
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:texts.welcome,
+                        reply_markup: JSON.stringify(keyboards.admin_off)
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                }
+            }
+        }
         else
-            if reminder on 
-                messafe "start" with suitable keyboard
+        {
+            if(functions.is_reminder_on(message.cht.id) == true) 
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.welcome,
+                    reply_markup: JSON.stringify(keyboards.people_on)
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
             else
-                messafe "start" with suitable keyboard
-    
-    else if /help
-		if admin
-			if config
-				message "there is no help needed do as i said" with no keyboard
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.welcome,
+                    reply_markup: JSON.stringify(keyboards.people_off)
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
+        }
+    }    
+    else if(message.text == "/help" || message.text == "😅 راهنمایی م کن!")
+    {
+		if(functions.is_admin(message.chat.id) == true)
+        {
+			if(functions.is_configuring(message.chat.id) == true)
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_no_help
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
 			else
-                if reminder on 
-				    message "help " with admin keyboard suitable
+            {
+                if(functions.is_reminder_on(message.cht.id) == true)
+                {
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:texts.help,
+                        reply_markup: JSON.stringify(keyboards.admin_on)
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                }
                 else
-                    message "help " with admin keyboard suitable
+                {
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:texts.help,
+                        reply_markup: JSON.stringify(keyboards.admin_off)
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                }
+            }
+        }
         else
-            message "help" with no keyboard
-    else if /config //config_0
-        if admin
-            if config
-                message "what the fuck are we doing" with no keyboard
+        {
+            api.sendMessage(
+            {
+                chat_id: message.chat.id,
+                text:texts.help
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+        }
+    }
+    else if(message.text == "/config" || message.text == "😎 می خوام جلسه بعدی رو تعیین کنم!") //config_0
+    {
+        if(functions.is_admin(message.chat.id) == true)
+        {
+            if(functions.is_configuring(message.chat.id) == true)
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_duplicate
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
             else
-                message "config_0" with config_0 keyboard
-                add_to_config(message.chat.id)
-                set_config_step(0)
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_0,
+                    reply_markup: JSON.stringify(keyboards.config_0)
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+                functions.add_to_config(message.chat.id);
+            }
+        }
         else
-            message "config denied and reported level0" with no keyboard
-            message masoud "denied_report_start" + message.from.username + "denied_report_middle" + 0 + "denied_report_end" with no keyboard
-    else if /next_event
-        if admin
-            if config
-                message "it depends on you complete this or cancell! now instead of bull tell me what i reqed (avail out)" with no keyboard
+        {
+            api.sendMessage(
+            {
+                chat_id: message.chat.id,
+                text:texts.config_denied_0
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+            api.sendMessage(
+            {
+                chat_id: 110224344, //@masoudalemi
+                text:texts.config_denied_report_start + message.from.username + texts.config_denied_middle + '۰' + texts.config_denied_end
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+        }
+    }
+    else if(message.text == "/next_event" || message.text == "🕒 جلسه بعدی چه زمانیه؟")
+    {
+        if(functions.is_admin(message.chat.id) == true)
+        {
+            if(functions.is_configuring(message.chat.id) == true)
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_depends
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
             else
-                if reminder on
-                    message "return_next_event.the_text" with admin keyboard suitable
+            {
+                if(functions.is_reminder_on(message.cht.id) == true)
+                {
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:return_next_event_h.text,
+                        reply_markup: JSON.stringify(keyboards.admin_on)
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                }
                 else
-                    message "return_next_event.the_text" with admin keyboard suitable
+                {
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:return_next_event_h.text,
+                        reply_markup: JSON.stringify(keyboards.admin_off)
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                }
+            }
+        }
         else
-            message "return_next_event.the_text" with no keyboard
-    else if /reminder_on
-        if admin
-            if config
-                "cant do actions now. if you want to do actions should do when you finished config with done or cancel" with no keyboard
+        {
+            api.sendMessage(
+            {
+                chat_id: message.chat.id,
+                text:return_next_event_h.text
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+        }
+    }
+    else if(message.text == "/reminder_on" || message.text == "⏳ از این به بعد جلسات رو به من یادآوری کن!")
+    {
+        if(functions.is_admin(message.chat.id) == true)
+        {
+            if(functions.is_configuring(message.chat.id) == true)
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_no_action
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
             else 
-                if reminder on
-                    message "already on!" with admin keyboard suitable
+            {
+                if(functions.is_reminder_on(message.cht.id) == true)
+                {
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:texts.reminder_already_on,
+                        reply_markup: JSON.stringify(keyboards.admin_on)
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                }
                 else
-                    message "alright, reminder made on" with admin keyboard suitable
-                    add_to_reminder();                
+                {
+                    functions.add_to_reminder(message.chat.id);   
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:texts.reminder_made_on,
+                        reply_markup: JSON.stringify(keyboards.admin_on)
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                }
+            }
+        }             
         else
-            if reminder on
-                message "already on!" with suitable keyboard
+        {
+            if(functions.is_reminder_on(message.cht.id) == true)
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.reminder_already_on,
+                    reply_markup: JSON.stringify(keyboards.people_on)
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
             else
-                message "alright, reminder made on" with suitable keyboard
-                add_to_reminder();   
-    else if /reminder_off
-        if admin
-            if config
-                "cant do actions now. if you want to do actions should do when you finished config with done or cancel" with no keyboard
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.reminder_made_on,
+                    reply_markup: JSON.stringify(keyboards.people_on)
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+                functions.add_to_reminder(message.chat.id);
+            }
+        }
+    }   
+    else if(message.text == "/reminder_off" || message.text == "⌛️ دیگه جلسات رو به من یادآوری نکن!")
+    {
+        if(functions.is_admin(message.chat.id) == true)
+        {
+            if(functions.is_configuring(message.chat.id) == true)
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_no_action
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
             else 
-                if reminder on
-                    message "alright, reminder made off" with admin keyboard suitable
-                    remove_from_reminder();     
+            {
+                if(functions.is_reminder_on(message.cht.id) == true)
+                {
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:texts.reinder_made_off,
+                        reply_markup: JSON.stringify(keyboards.admin_off)
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                    functions.remove_from_reminder(message.chat.id);     
+                }
                 else
-                    message "already off!" with admin keyboard suitable               
+                {
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:texts.reminder_already_off,
+                        reply_markup: JSON.stringify(keyboards.admin_off)
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                }
+            }                
+        }            
         else
-            if reminder on
-                message "alright, reminder made off" with keyboard suitable
-                remove_from_reminder();   
+        {
+            if(functions.is_reminder_on(message.cht.id) == true)
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.reminder_made_off,
+                    reply_markup: JSON.stringify(keyboards.people_off)
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+                functions.remove_from_reminder(message.chat.id);   
+            }
             else
-                message "already off!" with keyboard suitable
-    elseif شروع کانفیگ!!! //config_1
-        if config
-            if get_config_step() = 0
-                message "config_1" with config_1 keyboard
-                set_config_step(1)
-                create_tmp_event();
-                create_tmp_event_h();
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.reminder_already_off,
+                    reply_markup: JSON.stringify(keyboards.people_off)
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
+        }
+    }
+    else if (message.text == "/config" || message.text == "😎 می خوام جلسه بعدی رو تعیین کنم!")//config_1
+    {
+        if(functions.is_configuring(message.chat.id) == true)
+        {
+            if (functions.get_config_step(message.chat.id) == 0)
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_1,
+                    reply_markup: JSON.stringify(keyboards.confing_1)
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+                functions.set_config_step(message.chat.id, 1);
+            }
             else
-                message "you can't change procedure, if you missed something you need to cancell proc and resart" with no keyboard
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_procedure
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
+        }
         else
-            message "config denied and reported level1" with no keyboard
-            message masoud "denied_report_start" + message.from.username + "denied_report_middle" + 1 + "denied_report_end" with no keyboard
-    elseif ۱۳۹۴ //config_2
-        if config
-            if get_config_step() = 1
-                message "config_2" with config_2 keyboard
-                set_config_step(2)
-                switch(message.text) {
+        {
+            api.sendMessage(
+            {
+                chat_id: message.chat.id,
+                text:texts.config_denied_1
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+            api.sendMessage(
+            {
+                chat_id: 110224344, //@masoudalemi
+                text:texts.config_denied_report_start + message.from.username + texts.config_denied_report_middle + "۱" + texts.config_denied_report_end
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+        }
+    }
+    else if(message.text == "۱۳۹۴") //config_2
+    {
+        if(functions.is_configuring(message.chat.id) == true)
+        {
+            if (functions.get_config_step(message.chat.id) == 1)
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_2,
+                    reply_markup: JSON.stringify(keyboards.confing_2)
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+                functions.set_config_step(message.chat.id, 2)
+                switch(message.text)
+                {
                     case ۱۳۹۴:
-                        add_line_to_tmp_event(1394)
-                        add_line_to_tmp_event_h(۱۳۹۴)
+                        functions.add_line_to_tmp_event(1394);
+                        functions.add_line_to_tmp_event_h(۱۳۹۴);
                         break;
                     default:
-                        add_line_to_tmp_event("")
-                        add_line_to_tmp_event_h("")
-                        message masoud "during configing (step 2) of " + message.from.username + " we've just faced a problem. we entered default case of switch which means an acceptable text entered but not the year(s) we've tabie ed!" with no keyboard
+                        functions.add_line_to_tmp_event("");
+                        functions.add_line_to_tmp_event_h("");
+                        api.sendMessage(
+                        {
+                            chat_id: 110224344, //@masoudalemi
+                            text:texts.config_crash_report_start + message.from.username + texts.config_crash_report_middle + "۲" + texts.config_crash_report_end
+                        }, function(err, message)
+                        {
+                            if (err!=null)
+                            {
+                                fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                                {
+                                    if (write_err!=null)
+                                        console.log(write_err);
+                                });
+                            }
+
+                            if (message!=null)
+                            {
+                                fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                                {
+                                    if (write_err!=null)
+                                        console.log(write_err);
+                                });
+                            }
+
+                        });                        
                         break;
                 }
+            }
             else
-                message "you can't change procedure, if you missed something you need to cancell proc and resart" with no keyboard
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text: texts.config_procedure
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
+        }
         else
-            message "config denied and reported level2" with no keyboard
-            message masoud "denied_report_start" + message.from.username + "denied_report_middle" + 2 + "denied_report_end" with no keyboard
-    elseif فروردین | اردیبهشت | خرداد | تیر | مرداد | شهریور | مهر | آبان | آذر | دی | بهمن | اسفند //config_3
-        if config
-            if get_config_step() = 2
-                if message.text = اسفند
-                    message "config_3" with config_3_29 keyboard
-                else if message.text = مهر | آبان | آذر | دی | بهمن
-                    message "config_3" with config_3_30 keyboard
+        {
+            api.sendMessage(
+            {
+                chat_id: message.chat.id,
+                text:texts.config_denied_2
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+        }
+    }
+    else if(message.text == "فروردین" || message.text == "اردیبهشت" || message.text == "خرداد" || message.text == "تیر" || message.text == "مرداد" || message.text == "شهریور" || message.text == "دی" || message.text == "بهمن" || message.text == "اسفند")//config_3
+    {
+        if(functions.is_configuring(message.chat.id) == true)
+        {
+            if (functions.get_config_step(message.chat.id) == 2)
+            {
+                if (message.text == "اسفند")
+                {
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:texts.config_3,
+                        reply_markup: keyboards.config_3_29
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                }
+                else if (message.text == "مهر" || message.text == "آبان" || message.text == "آذر" || message.text == "دی" || message.text == "بهمن")
+                {
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:texts.config_3,
+                        reply_markup: keyboards.config_3_30
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                }
                 else
-                    message "config_3" with config_3_31 keyboard
-                set_config_step(3)
-                switch(message.text) {
-                    case فروردین:
-                        add_line_to_tmp_event(1)
-                        add_line_to_tmp_event_h(۱)
-                        break;
-                    case اردیبهشت:
-                        add_line_to_tmp_event(2)
-                        add_line_to_tmp_event_h(۲)
-                        break;
-                    case خرداد:
-                        add_line_to_tmp_event(3)
-                        add_line_to_tmp_event_h(۳)
-                        break;
-                    case تیر:
-                        add_line_to_tmp_event(4)
-                        add_line_to_tmp_event_h(۴)
-                        break;
-                    case مرداد:
-                        add_line_to_tmp_event(5)
-                        add_line_to_tmp_event_h(۵)
-                        break;
-                    case شهریور:
-                        add_line_to_tmp_event(6)
-                        add_line_to_tmp_event_h(۶)
-                        break;
-                    case مهر:
-                        add_line_to_tmp_event(7)
-                        add_line_to_tmp_event_h(۷)
-                        break;
-                    case آبان:
-                        add_line_to_tmp_event(8)
-                        add_line_to_tmp_event_h(۸)
-                        break;
-                    case آذر:
-                        add_line_to_tmp_event(9)
-                        add_line_to_tmp_event_h(۹)
-                        break;
-                    case دی:
-                        add_line_to_tmp_event(10)
-                        add_line_to_tmp_event_h(۱۰)
-                        break;
-                    case بهمن:
-                        add_line_to_tmp_event(11)
-                        add_line_to_tmp_event_h(۱۱)
-                        break;
-                    case اسفند:
-                        add_line_to_tmp_event(12)
-                        add_line_to_tmp_event_h(۱۲)
-                        break;
-                    default:
-                        add_line_to_tmp_event("")
-                        add_line_to_tmp_event_h("")
-                        message masoud "during configing (step 3) of " + message.from.username + " we've just faced a problem. we entered default case of switch which means an acceptable text entered but not the month(s) we've tabie ed!" with no keyboard
-                        break;
+                {
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:texts.config_3,
+                        reply_markup: keyboards.config_3_31
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                    functions.set_config_step(message.chat.id, 3);
+                    switch(message.text)
+                    {
+                        case "فروردین":
+                            functions.add_line_to_tmp_event(1);
+                            functions.add_line_to_tmp_event_h(۱);
+                            break;
+                        case "اردیبهشت":
+                            functions.add_line_to_tmp_event(2);
+                            functions.add_line_to_tmp_event_h(۲);
+                            break;
+                        case "خرداد":
+                            functions.add_line_to_tmp_event(3);
+                            functions.add_line_to_tmp_event_h(۳);
+                            break;
+                        case "تیر":
+                            functions.add_line_to_tmp_event(4);
+                            functions.add_line_to_tmp_event_h(۴);
+                            break;
+                        case "مرداد":
+                            functions.add_line_to_tmp_event(5);
+                            functions.add_line_to_tmp_event_h(۵);
+                            break;
+                        case "شهریور":
+                            functions.add_line_to_tmp_event(6);
+                            functions.add_line_to_tmp_event_h(۶);
+                            break;
+                        case "مهر":
+                            functions.add_line_to_tmp_event(7);
+                            functions.add_line_to_tmp_event_h(۷);
+                            break;
+                        case "آبان":
+                            functions.add_line_to_tmp_event(8);
+                            functions.add_line_to_tmp_event_h(۸);
+                            break;
+                        case "آذر":
+                            functions.add_line_to_tmp_event(9);
+                            functions.add_line_to_tmp_event_h(۹);
+                            break;
+                        case "دی":
+                            functions.add_line_to_tmp_event(10);
+                            functions.add_line_to_tmp_event_h(۱۰);
+                            break;
+                        case "بهمن":
+                            functions.add_line_to_tmp_event(11);
+                            functions.add_line_to_tmp_event_h(۱۱);
+                            break;
+                        case "اسفند":
+                            functions.add_line_to_tmp_event(12);
+                            functions.add_line_to_tmp_event_h(۱۲);
+                            break;
+                        default:
+                            functions.add_line_to_tmp_event("");
+                            functions.add_line_to_tmp_event_h("");
+                            api.sendMessage(
+                            {
+                                chat_id: 110224344, //@masoudalemi
+                                text:texts.config_crash_report_start + message.from.username + texts.config_crash_report_middle + "۳" + texts.config_crash_report_end
+                            }, function(err, message)
+                            {
+                                if (err!=null)
+                                {
+                                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                                    {
+                                        if (write_err!=null)
+                                            console.log(write_err);
+                                    });
+                                }
+
+                                if (message!=null)
+                                {
+                                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                                    {
+                                        if (write_err!=null)
+                                            console.log(write_err);
+                                    });
+                                }
+
+                            });
+                            break;
+                    }
                 }
+            }
             else
-                message "you can't change procedure, if you missed something you need to cancell proc and resart" with no keyboard
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_procedure
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
+        }
         else
-            message "config denied and reported level3" with no keyboard
-            message masoud "denied_report_start" + message.from.username + "denied_report_middle" + 3 + "denied_report_end" with no keyboard
-    elseif ۰۱ | ۰۲ | ۰۳ | ۰۴ | ۰۵ | ۰۶ | ۰۷ | ۰۸ | ۰۹ | ۱۰ | ۱۱ | ۱۲ | ۱۳ | ۱۴ | ۱۵ | ۱۶ | ۱۷ | ۱۸ | ۱۹ | ۲۰ | ۲۱ | ۲۲ | ۲۳ | ۲۴ | ۲۵ | ۲۶ | ۲۷ | ۲۸ | ۲۹ | ۳۰ | ۳۱//config_4
-        if config
-            if get_config_step() = 3
-                message "config_4" with config_4 keyboard
-                switch(message.text) {
-                    case ۰۱:
-                        add_line_to_tmp_event(1)
-                        add_line_to_tmp_event_h(۱)
-                        set_config_step(4)
+        {
+            api.sendMessage(
+            {
+                chat_id: message.chat.id,
+                text:texts.config_denied_3
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+        }
+    }
+    else if( message.text == "۰۱" || message.text == "۰۲" || message.text == "۰۳" || message.text == "۰۴" || message.text == "۰۵" || message.text == "۰۶" || message.text == "۰۷" || message.text == "۰۸" || message.text == "۰۹" || message.text == "۱۰" || message.text == "۱۱" || message.text == "۱۲" || message.text == "۱۳" || message.text == "۱۴" || message.text == "۱۵" || message.text == "۱۶" || message.text == "۱۷" || message.text == "۱۸" || message.text == "۱۹" || message.text == "۲۰" || message.text == "۲۱" || message.text == "۲۲" || message.text == "۲۳" || message.text == "۲۴" || message.text == "۲۵" || message.text == "۲۶" || message.text == "۲۷" || message.text == "۲۸" || message.text == "۲۹" || message.text == "۳۰" || message.text == "۳۱") //config_4
+    {
+        if(functions.is_configuring(message.chat.id) == true)
+        {
+            if (functions.get_config_step(message.chat.id) == 3)
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_4,
+                    reply_markup: keyboards.config_4
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+                switch(message.text)
+                {
+                    case "۰۱":
+                        functions.add_line_to_tmp_event(1);
+                        functions.add_line_to_tmp_event_h(۱);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۰۲:
-                        add_line_to_tmp_event(2)
-                        add_line_to_tmp_event_h(۲)
-                        set_config_step(4)
+                    case "۰۲":
+                        functions.add_line_to_tmp_event(2);
+                        functions.add_line_to_tmp_event_h(۲);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۰۳:
-                        add_line_to_tmp_event(3)
-                        add_line_to_tmp_event_h(۳)
-                        set_config_step(4)
+                    case "۰۳":
+                        functions.add_line_to_tmp_event(3);
+                        functions.add_line_to_tmp_event_h(۳);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۰۴:
-                        add_line_to_tmp_event(4)
-                        add_line_to_tmp_event_h(۴)
-                        set_config_step(4)
+                    case "۰۴":
+                        functions.add_line_to_tmp_event(4);
+                        functions.add_line_to_tmp_event_h(۴);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۰۵:
-                        add_line_to_tmp_event(5)
-                        add_line_to_tmp_event_h(۵)
-                        set_config_step(4)
+                    case "۰۵":
+                        functions.add_line_to_tmp_event(5);
+                        functions.add_line_to_tmp_event_h(۵);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
                     case ۰۶:
-                        add_line_to_tmp_event(6)
-                        add_line_to_tmp_event_h(۶)
-                        set_config_step(4)
+                        functions.add_line_to_tmp_event(6);
+                        functions.add_line_to_tmp_event_h(۶);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۰۷:
-                        add_line_to_tmp_event(7)
-                        add_line_to_tmp_event_h(۷)
-                        set_config_step(4)
+                    case "۰۷":
+                        functions.add_line_to_tmp_event(7);
+                        functions.add_line_to_tmp_event_h(۷);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۰۸:
-                        add_line_to_tmp_event(8)
-                        add_line_to_tmp_event_h(۸)
-                        set_config_step(4)
+                    case "۰۸":
+                        functions.add_line_to_tmp_event(8);
+                        functions.add_line_to_tmp_event_h(۸);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۰۹:
-                        add_line_to_tmp_event(9)
-                        add_line_to_tmp_event_h(۹)
-                        set_config_step(4)
+                    case "۰۹":
+                        functions.add_line_to_tmp_event(9);
+                        functions.add_line_to_tmp_event_h(۹);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۱۰:
-                        add_line_to_tmp_event(10)
-                        add_line_to_tmp_event_h(۱۰)
-                        set_config_step(4)
+                    case "۱۰":
+                        functions.add_line_to_tmp_event(10);
+                        functions.add_line_to_tmp_event_h(۱۰);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۱۱:
-                        add_line_to_tmp_event(11)
-                        add_line_to_tmp_event_h(۱۱)
-                        set_config_step(4)
+                    case "۱۱":
+                        functions.add_line_to_tmp_event(11);
+                        functions.add_line_to_tmp_event_h(۱۱);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۱۲:
-                        add_line_to_tmp_event(12)
-                        add_line_to_tmp_event_h(۱۲)
-                        set_config_step(4)
+                    case "۱۲":
+                        functions.add_line_to_tmp_event(12);
+                        functions.add_line_to_tmp_event_h(۱۲);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۱۳:
-                        add_line_to_tmp_event(13)
-                        add_line_to_tmp_event_h(۱۳)
-                        set_config_step(4)
+                    case "۱۳":
+                        functions.add_line_to_tmp_event(13);
+                        functions.add_line_to_tmp_event_h(۱۳);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۱۴:
-                        add_line_to_tmp_event(14)
-                        add_line_to_tmp_event_h(۱۴)
-                        set_config_step(4)
+                    case "۱۴":
+                        functions.add_line_to_tmp_event(14);
+                        functions.add_line_to_tmp_event_h(۱۴);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۱۵:
-                        add_line_to_tmp_event(15)
-                        add_line_to_tmp_event_h(۱۵)
-                        set_config_step(4)
+                    case "۱۵":
+                        functions.add_line_to_tmp_event(15);
+                        functions.add_line_to_tmp_event_h(۱۵);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
                     case ۱۶:
-                        add_line_to_tmp_event(16)
-                        add_line_to_tmp_event_h(۱۶)
-                        set_config_step(4)
+                        functions.add_line_to_tmp_event(16);
+                        functions.add_line_to_tmp_event_h(۱۶);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۱۷:
-                        add_line_to_tmp_event(17)
-                        add_line_to_tmp_event_h(۱۷)
-                        set_config_step(4)
+                    case "۱۷":
+                        functions.add_line_to_tmp_event(17);
+                        functions.add_line_to_tmp_event_h(۱۷);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۱۸:
-                        add_line_to_tmp_event(18)
-                        add_line_to_tmp_event_h(۱۸)
-                        set_config_step(4)
+                    case "۱۸":
+                        functions.add_line_to_tmp_event(18);
+                        functions.add_line_to_tmp_event_h(۱۸);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۱۹:
-                        add_line_to_tmp_event(19)
-                        add_line_to_tmp_event_h(۱۹)
-                        set_config_step(4)
+                    case "۱۹":
+                        functions.add_line_to_tmp_event(19);
+                        functions.add_line_to_tmp_event_h(۱۹);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۲۰:
-                        add_line_to_tmp_event(20)
-                        add_line_to_tmp_event_h(۲۰)
-                        set_config_step(4)
+                    case "۲۰":
+                        functions.add_line_to_tmp_event(20);
+                        functions.add_line_to_tmp_event_h(۲۰);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۲۱:
-                        add_line_to_tmp_event(21)
-                        add_line_to_tmp_event_h(۲۱)
-                        set_config_step(4)
+                    case "۲۱":
+                        functions.add_line_to_tmp_event(21);
+                        functions.add_line_to_tmp_event_h(۲۱);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۲۲:
-                        add_line_to_tmp_event(22)
-                        add_line_to_tmp_event_h(۲۲)
-                        set_config_step(4)
+                    case "۲۲":
+                        functions.add_line_to_tmp_event(22);
+                        functions.add_line_to_tmp_event_h(۲۲);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۲۳:
-                        add_line_to_tmp_event(23)
-                        add_line_to_tmp_event_h(۲۳)
-                        set_config_step(4)
+                    case "۲۳":
+                        functions.add_line_to_tmp_event(23);
+                        functions.add_line_to_tmp_event_h(۲۳);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۲۴:
-                        add_line_to_tmp_event(24)
-                        add_line_to_tmp_event_h(۲۴)
-                        set_config_step(4)
+                    case "۲۴":
+                        functions.add_line_to_tmp_event(24);
+                        functions.add_line_to_tmp_event_h(۲۴);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۲۵:
-                        add_line_to_tmp_event(25)
-                        add_line_to_tmp_event_h(۲۵)
-                        set_config_step(4)
+                    case "۲۵":
+                        functions.add_line_to_tmp_event(25);
+                        functions.add_line_to_tmp_event_h(۲۵);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۲۶:
-                        add_line_to_tmp_event(26)
-                        add_line_to_tmp_event_h(۲۶)
-                        set_config_step(4)
+                    case "۲۶":
+                        functions.add_line_to_tmp_event(26);
+                        functions.add_line_to_tmp_event_h(۲۶);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۲۷:
-                        add_line_to_tmp_event(27)
-                        add_line_to_tmp_event_h(۲۷)
-                        set_config_step(4)
+                    case "۲۷":
+                        functions.add_line_to_tmp_event(27);
+                        functions.add_line_to_tmp_event_h(۲۷);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۲۸:
-                        add_line_to_tmp_event(28)
-                        add_line_to_tmp_event_h(۲۸)
-                        set_config_step(4)
+                    case "۲۸":
+                        functions.add_line_to_tmp_event(28);
+                        functions.add_line_to_tmp_event_h(۲۸);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۲۹:
-                        add_line_to_tmp_event(29)
-                        add_line_to_tmp_event_h(۲۹)
-                        set_config_step(4)
+                    case "۲۹":
+                        functions.add_line_to_tmp_event(29);
+                        functions.add_line_to_tmp_event_h(۲۹);
+                        functions.set_config_step(message.chat.id, 4);
                         break;
-                    case ۳۰:
-                        if get_line_from_tmp_event(2) = 12
-                            message "30 esfand jalase?! :( my developer wasn't on mood calcing cabise! try another day or desc!" no markup
+                    case "۳۰":
+                        if (functions.get_line_from_tmp_event(2) == "12")
+                        {
+                            api.sendMessage(
+                            {
+                                chat_id: message.chat.id,
+                                text:texts.config_kabise
+                            }, function(err, message)
+                            {
+                                if (err!=null)
+                                {
+                                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                                    {
+                                        if (write_err!=null)
+                                            console.log(write_err);
+                                    });
+                                }
+
+                                if (message!=null)
+                                {
+                                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                                    {
+                                        if (write_err!=null)
+                                            console.log(write_err);
+                                    });
+                                }
+
+                            });
+                        }
                         else
-                            add_line_to_tmp_event(30)
-                            add_line_to_tmp_event_h(۳۰)
-                            set_config_step(4)
+                        {
+                            functions.add_line_to_tmp_event(30);
+                            functions.add_line_to_tmp_event_h(۳۰);
+                            functions.set_config_step(message.chat.id, 4);
+                        }
                         break;
-                    case ۳۱:
-                        if get_line_from_tmp_event(2) = 12 | 11 | 10 | 9 | 8 | 7
-                            message "khodayi yekam fekr kon bebin mahi ke entekhab kardi 31 rooz dare?! just fucking choose what i leted you" no markup
+                    case "۳۱":
+                        if (get_line_from_tmp_event(2) == "12" || get_line_from_tmp_event(2) == "11" || get_line_from_tmp_event(2) == "10" || get_line_from_tmp_event(2) == "9" || get_line_from_tmp_event(2) == "8" || get_line_from_tmp_event(2) == "7")
+                        {
+                            api.sendMessage(
+                            {
+                                chat_id: message.chat.id,
+                                text:texts.config_31
+                            }, function(err, message)
+                            {
+                                if (err!=null)
+                                {
+                                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                                    {
+                                        if (write_err!=null)
+                                            console.log(write_err);
+                                    });
+                                }
+
+                                if (message!=null)
+                                {
+                                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                                    {
+                                        if (write_err!=null)
+                                            console.log(write_err);
+                                    });
+                                }
+
+                            });
+                        }
                         else
-                            add_line_to_tmp_event(31)
-                            add_line_to_tmp_event_h(۳۱)
-                            set_config_step(4)
+                        {
+                            functions.add_line_to_tmp_event(31);
+                            functions.add_line_to_tmp_event_h(۳۱);
+                            functions.set_config_step(message.chat.id, 4);
+                        }
                         break;
                     default:
-                        add_line_to_tmp_event("")
-                        add_line_to_tmp_event_h("")
-                        message masoud "during configing (step 4) of " + message.from.username + " we've just faced a problem. we entered default case of switch which means an acceptable text entered but not the day(s) we've tabie ed!" with no keyboard
+                        functions.add_line_to_tmp_event("");
+                        functions.add_line_to_tmp_event_h("");
+                        api.sendMessage(
+                        {
+                            chat_id: 110224344, //@masoudalemi
+                            text:texts.config_crash_report_start + message.from.username + texts.config_crash_report_middle + "۴" + texts.config_crash_report_end
+                        }, function(err, message)
+                        {
+                            if (err!=null)
+                            {
+                                fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                                {
+                                    if (write_err!=null)
+                                        console.log(write_err);
+                                });
+                            }
+
+                            if (message!=null)
+                            {
+                                fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                                {
+                                    if (write_err!=null)
+                                        console.log(write_err);
+                                });
+                            }
+
+                        });
                         break;
                 }
+            }
             else
-                message "you can't change procedure, if you missed something you need to cancell proc and resart" with no keyboard
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_procedure
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
+        }
         else
-            message "config denied and reported level4" with no keyboard
-            message masoud "denied_report_start" + message.from.username + "denied_report_middle" + 4 + "denied_report_end" with no keyboard
-    elseif یه جای دیگه غیر از مرکز... //config_5
-        if config
-            if get_config_step() = 4
-                set_config_step(5)
-                message "config_5" with config_5 keyboard
+        {
+            api.sendMessage(
+            {
+                chat_id: message.chat.id,
+                text:texts.config_denied_4
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+        }
+    }
+    else if (message.text == "یه جایی غیر از مرکز...")//config_5
+    {
+        if(functions.is_configuring(message.chat.id) == true)
+        {
+            if (functions.get_config_step(message.chat.id) == 4)
+            {
+                functions.set_config_step(message.chat.id, 5);
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_5,
+                    reply_markup: keyboards.config_5
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
             else
-                message "you can't change procedure, if you missed something you need to cancell proc and resart" with no keyboard
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_procedure
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
+        }
         else
-            message "config denied and reported level5" with no keyboard
-            message masoud "denied_report_start" + message.from.username + "denied_report_middle" + 5 + "denied_report_end" with no keyboard
-    elseif مرکز تحقیقات //config_6
-        if config
-            if get_config_step() = 4
-                set_config_step(6)
-                message "config_6" with config_6 keyboard
-                add_line_to_tmp_event(SRC)
-                add_line_to_tmp_event_h(مرکز تحقیقات دانشگاه)
+        {
+            api.sendMessage(
+            {
+                chat_id: message.chat.id,
+                text:texts.config_denied_5
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+        }
+    }
+    else if(message.text == "مرکز تحقیقات") //config_6
+    {
+        if(functions.is_configuring(message.chat.id) == true)
+        {
+            if (functions.get_config_step(message.chat.id) == 4)
+            {
+                functions.set_config_step(message.chat.id, 6);
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_6,
+                    reply_markup: keyboards.config_6
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+                functions.add_line_to_tmp_event("SRC");
+                functions.add_line_to_tmp_event_h("مرکز تحقیقات دانشگاه");
+            }
             else
-                message "you can't change procedure, if you missed something you need to cancell proc and resart" with no keyboard
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_procedure
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
+        }
         else
-            message "config denied and reported level6" with no keyboard
-            message masoud "denied_report_start" + message.from.username + "denied_report_middle" + 6 + "denied_report_end" with no keyboard
-    elseif هماهنگه //config_8
-        if config
-            if get_config_step() = 8
-                remove_from_config(chat.id)
-                if reminder on
-                    message "we've jst finished the config!" with suitable admin keyboard
+        {
+            api.sendMessage(
+            {
+                chat_id: message.chat.id,
+                text:texts.config_denied_6
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+        }
+    }
+    else if(message.text == "✔️ هماهنگه!") //config_8
+    {
+        if(functions.is_configuring(message.chat.id) == true)
+        {
+            if (functions.get_config_step(message.chat.id) == 8)
+            {
+                functions.remove_from_config(message.chat.id);
+                if(functions.is_reminder_on(message.cht.id) == true)
+                {
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:texts.config_finished,
+                        reply_markup: keyboards.admin_on
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                }
                 else
-                    message "we've jst finished the config!" with suitable admin keyboard
-                sticker X
-                finish_tmp_event()
-                finish_tmp_event_h()
+                {
+                    api.sendMessage(
+                    {
+                        chat_id: message.chat.id,
+                        text:texts.config_finished,
+                        reply_markup: keyboards.admin_off
+                    }, function(err, message)
+                    {
+                        if (err!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                        if (message!=null)
+                        {
+                            fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                            {
+                                if (write_err!=null)
+                                    console.log(write_err);
+                            });
+                        }
+
+                    });
+                }
+                api.sendSticker(
+                {
+                    chat_id: message.chat.id,
+                    sticker: "BQADBAADYAADNba8BWaIG_pieK4zAg"
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+                functions.finish_tmp_event();
+                functions.finish_tmp_event_h();
+            }
             else
-                message "there is more information i need for finishing config" with no keyboard
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_need_more_info
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
+        }
         else
-            message "config denied and reported level8" with no keyboard
-            message masoud "denied_report_start" + message.from.username + "denied_report_middle" + 8 + "denied_report_end" with no keyboard
-    elseif کانفیگ کنسله! | نه کنسلش کن  //config_8
-        if config
-            remove_from_config(chat.id)
-            if reminder on
-                message "we've jst cancelled the config!" with suitable admin keyboard
+        {
+            api.sendMessage(
+            {
+                chat_id: message.chat.id,
+                text:texts.config_denied_8
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+        }
+    }
+    else if(message.text == "✖️ نه، کنسلش کن!" || message.text == "✖️ کانفیگ رو کنسل کن...") //config_8
+    {
+        if(functions.is_configuring(message.chat.id) == true)
+        {
+            functions.remove_from_config(message.chat.id)
+            if(functions.is_reminder_on(message.cht.id) == true)
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_cancelled,
+                    reply_markup: keyboards.admin_on
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
             else
-                message "we've jst cancelled the config!" with suitable admin keyboard
-            sticker (😄)
-            cancel_tmp_event()
-            cancel_tmp_event_h()
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_cancelled,
+                    reply_markup: keyboards.admin_off
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+            }
+            api.sendSticker(
+            {
+                chat_id: message.chat.id,
+                sticker: "BQADBAADLQADNba8BZtWr_pmH7fSAg"
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+            functions.cancel_tmp_event();
+            functions.cancel_tmp_event_h();
         else
-            message "undefined!" with no keyboard
+        {
+            api.sendMessage(
+            {
+                chat_id: message.chat.id,
+                text:texts.un_defined
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+        }
+    }
     else
-        if admin
-            if config
-                if get_config_step() = 5 //config_6
-                    set_config_step(6)
-                    message "config_6" with no keyboard
-                    add_line_to_tmp_event(message.text)
-                    add_line_to_tmp_event_h(message.text)
-                else if get_config_step() = 6 //config_7 //config_8
-                    set_config_step(7)
-                    message "config_7" with no keyboard
-                    add_line_to_tmp_event(message.text)
-                    add_line_to_tmp_event_h(message.text)
-                else if get_config_step() = 7 //config_8
-                    set_config_step(8)
-                    message "config_8" with config_8 keyboard
-                    add_line_to_tmp_event(message.text)
-                    add_line_to_tmp_event_h(message.text)
-                else
-                    message "only tell me what i asked, and do it only with keyboard i gave it to you!" with no keyboard
+    {
+        if(functions.is_configuring(message.chat.id) == true)
+        {
+            if (functions.get_config_step(message.chat.id) == 5) //config_6
+            {
+                functions.set_config_step(message.chat.id, 6)
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_6
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+                functions.add_line_to_tmp_event(message.text);
+                functions.add_line_to_tmp_event_h(message.text);
+            }
+            else if (functions.get_config_step(message.chat.id) == 6)//config_7 //config_8
+            {
+                functions.set_config_step(message.chat.id, 7);
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_7
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+                functions.add_line_to_tmp_event(message.text);
+                functions.add_line_to_tmp_event_h(message.text);
+            }
+            else if(functions.get_config_step(message.chat.id) == 7) //config_8
+            {
+                functions.set_config_step(message.chat.id, 8);
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_8,
+                    reply_markup: keyboards.config_8
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
+
+                });
+                functions.add_line_to_tmp_event(message.text);
+                functions.add_line_to_tmp_event_h(message.text);
+            }
             else
-                message "undefined!"
-	 */        
+            {
+                api.sendMessage(
+                {
+                    chat_id: message.chat.id,
+                    text:texts.config_my_keyboard
+                }, function(err, message)
+                {
+                    if (err!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
 
-    console.log(message.from.username + ' // ' + message.text)
+                    if (message!=null)
+                    {
+                        fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                        {
+                            if (write_err!=null)
+                                console.log(write_err);
+                        });
+                    }
 
+                });
+            }
+        }
+        else
+        {
+            api.sendMessage(
+            {
+                chat_id: message.chat.id,
+                text:texts.un_defined
+            }, function(err, message)
+            {
+                if (err!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(err), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+                if (message!=null)
+                {
+                    fs.appendFile('output.log', '\n' + JSON.stringify(message), function (write_err)
+                    {
+                        if (write_err!=null)
+                            console.log(write_err);
+                    });
+                }
+
+            });
+        }
+    }
 });
