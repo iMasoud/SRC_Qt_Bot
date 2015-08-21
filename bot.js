@@ -21,7 +21,7 @@ var api = new telegram(
 
 api.on('message', function(message)
 {
-//TODO: fix admin errors
+//TODO: change .tmp to .id
 //TODO: create timer function for reminding guys in list
 
 	if(message.text == "/start")
@@ -393,7 +393,7 @@ api.on('message', function(message)
             api.sendMessage(
             {
                 chat_id: 110224344, //@masoudalemi
-                text:texts.config_denied_report_start + message.from.username + texts.config_denied_middle + '۰' + texts.config_denied_end
+                text:texts.config_denied_report_start + message.from.username + texts.config_denied_report_middle + '۰' + texts.config_denied_report_end
             }, function(err, message)
             {
                 if (err!=null)
